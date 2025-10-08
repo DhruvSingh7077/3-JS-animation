@@ -6,18 +6,16 @@ const scene = new THREE.Scene();
 
 // add objects to the scene
 const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-const cubeMaterial = new THREE.MeshBasicMaterial({ color: "red" });
+const cubeMaterial = new THREE.MeshBasicMaterial({
+  color: "red",
+  wireframe: true,
+});
 
 const cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
 scene.add(cubeMesh);
 
-// initialize the renderer
-const canvas = document.querySelector("canvas.threejs");
-const renderer = new THREE.WebGLRenderer({
-  canvas: canvas,
-});
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const axesHelper = new THREE.AxesHelper(2);
+scene.add(axesHelper);
 
 // innitialize thr camera
 const camera = new THREE.PerspectiveCamera(
@@ -26,6 +24,15 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   200
 );
+camera.position.z = 5;
+// initialize the renderer
+const canvas = document.querySelector("canvas.threejs");
+const renderer = new THREE.WebGLRenderer({
+  canvas: canvas,
+  antialias: true,
+});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
 
 // const aspectRatio = window.innerWidth / window.innerHeight;
 // const camera = new THREE.OrthographicCamera(
@@ -36,8 +43,6 @@ const camera = new THREE.PerspectiveCamera(
 //   0.1,
 //   200
 // );
-
-camera.position.z = 5;
 
 // instantiate a controls
 const controls = new OrbitControls(camera, canvas);
