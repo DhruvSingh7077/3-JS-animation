@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-
+import { Pane } from "tweakpane";
 // initialize the scene
 const scene = new THREE.Scene();
 
