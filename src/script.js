@@ -1,30 +1,50 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Pane } from "tweakpane";
+
+// initialize the pane
+const pane = new Pane();
+
 // initialize the scene
 const scene = new THREE.Scene();
 
-// add objects to the scene
-// const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-const cubeMaterial = new THREE.MeshBasicMaterial({
-  color: "red",
-  wireframe: true,
+// add stuff here
+const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+const sunMaterial = new THREE.MeshBasicMaterial({
+  color: 0xfff700,
 });
 
-const cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
-scene.add(cubeMesh);
+const sun = new THREE.Mesh(sphereGeometry, sunMaterial);
 
-// const axesHelper = new THREE.AxesHelper(2);
-// scene.add(axesHelper);
+sun.scale.setScalar(5);
+scene.add(sun);
+
+const earthMaterial = new THREE.MeshBasicMaterial({
+  color: "blue",
+});
+
+const earth = new THREE.Mesh(sphereGeometry, earthMaterial);
+earth.position.x = 12;
+scene.add(earth);
+
+const moonMaterial = new THREE.MeshBasicMaterial({
+  color: "gray",
+});
+
+const moon = new THREE.Mesh(sphereGeometry, moonMaterial);
+moon.scale.setScalar(0.27);
+moon.position.x = 2;
+earth.add(moon);
 
 // innitialize thr camera
 const camera = new THREE.PerspectiveCamera(
   35,
   window.innerWidth / window.innerHeight,
   0.1,
-  200
+  400
 );
-camera.position.z = 5;
+camera.position.z = 100;
+camera.position.y = 5;
 // initialize the renderer
 const canvas = document.querySelector("canvas.threejs");
 const renderer = new THREE.WebGLRenderer({
@@ -34,17 +54,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
 
-// const aspectRatio = window.innerWidth / window.innerHeight;
-// const camera = new THREE.OrthographicCamera(
-//   -1 * aspectRatio,
-//   1 * aspectRatio,
-//   1,
-//   -1,
-//   0.1,
-//   200
-// );
-
-// instantiate a controls
+// add controls
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 // controls.autorotate = true;
@@ -57,15 +67,19 @@ window.addEventListener("resize", () => {
 
 // intialize the clock
 const clock = new THREE.Clock();
-let previousTime = 0;
 
 // render the scene
 const renderloop = () => {
-  // const currentTime = clock.getElapsedTime();
-  // const delta = currentTime - previousTime;
-  // previousTime = currentTime;
+  const elapsedTime = clock.getElapsedTime();
 
-  //cubeMesh.rotation.y += THREE.MathUtils.degToRad(1) * delta * 20;
+  // add animation here
+  earth.rotation.y += 0.01;
+
+  earth.position.x = Math.sin(elapsedTime) * 10;
+  earth.position.z = Math.cos(elapsedTime) * 10;
+
+  moon.position.x = Math.sin(elapsedTime * 2) * 2;
+  moon.position.z = Math.cos(elapsedTime * 2) * 2;
 
   controls.update();
   renderer.render(scene, camera);
